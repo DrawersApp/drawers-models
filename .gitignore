@@ -3,6 +3,10 @@
 .project
 .settings/
 
+# Gradle
+.gradle
+build/
+
 # Intellij
 .idea/
 *.iml
