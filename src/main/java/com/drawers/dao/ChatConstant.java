@@ -1,4 +1,4 @@
-package dao;
+package com.drawers.dao;
 
 import java.util.Arrays;
 import java.util.HashSet;
