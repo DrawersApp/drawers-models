@@ -60,6 +60,7 @@ public class QAResponse {
     @SerializedName("t")
     private String title;
 
+    // max of 100 chars
     @SerializedName("d")
     private String description;
 
@@ -76,10 +77,14 @@ public class QAResponse {
                       ActionableItem secondary, ActionableItem tertiary) {
         this.heroImage = heroImage;
         this.title = title;
-        this.description = description;
+        this.description = getStripDescription(description);
         this.primary = primary;
         this.secondary = secondary;
         this.tertiary = tertiary;
+    }
+
+    private String getStripDescription(String description) {
+        return description.length() < 100 ? description : String.format("%.100s", description) + "...";
     }
 
     public static class ActionableItem {
@@ -121,10 +126,6 @@ public class QAResponse {
             this.displayText = displayText;
             this.reply = reply;
             this.replyType = replyType;
-        }
-
-        public void click() {
-
         }
     }
 
