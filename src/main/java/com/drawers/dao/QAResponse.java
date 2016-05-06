@@ -133,5 +133,6 @@ public class QAResponse {
     public static class ReplyType {
         public static final String WEB = "W";
         public static final String REPLY = "R";
+        public static final String NA = "N";
     }
 }
