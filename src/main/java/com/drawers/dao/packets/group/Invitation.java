@@ -1,5 +1,6 @@
 package com.drawers.dao.packets.group;
 
+import com.drawers.dao.ChatConstant;
 import com.drawers.dao.mqttinterface.PublisherImpl;
 import com.drawers.dao.packets.listeners.InvitationListener;
 import com.drawers.dao.utils.Singletons;
@@ -11,6 +12,7 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 
@@ -52,9 +54,13 @@ public class Invitation extends MqttStanaza {
 
         // Accept it by putting it in your db and subscribing to /g/+, /o/m. - mqttstanza - groupId.
         Set<InvitationListener> invitationListeners = new CopyOnWriteArraySet<>();
+        String selfClientId;
+        String userName;
 
-        public void addInvitationListener(InvitationListener invitationListener) {
+        public void addInvitationListener(InvitationListener invitationListener, String selfClientId, String userName) {
             invitationListeners.add(invitationListener);
+            this.selfClientId = selfClientId;
+            this.userName = userName;
         }
 
         @Override
@@ -70,8 +76,14 @@ public class Invitation extends MqttStanaza {
             }
             publisher.subscribe(new SubscribeOthers(SubscribeOthers.GROUP_NAMESPACE,  invitationInfo.groupId).getChannel(), 1,
                     null, null);
+
+            String packetId = UUID.randomUUID().toString();
+            String joiningText = String.format("%s joined", userName);
+            GroupMessage groupMessage = new GroupMessage(invitationInfo.getGroupId(), packetId, joiningText,
+                    ChatConstant.ChatType.NOTIFICATION, selfClientId);
+            groupMessage.sendStanza(publisher);
             for (InvitationListener invitationListener : invitationListeners) {
-                invitationListener.invited(invitationInfo, publisher);
+                invitationListener.invited(invitationInfo, publisher, joiningText, packetId);
             }
         }
     }

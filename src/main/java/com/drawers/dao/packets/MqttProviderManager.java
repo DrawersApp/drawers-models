@@ -124,9 +124,9 @@ public final class MqttProviderManager {
         groupMembersProvider.addGroupMembersListener(groupMembersListener);
     }
 
-    public void addInvitationListener(InvitationListener invitationListener) {
+    public void addInvitationListener(InvitationListener invitationListener, String selfClient, String userName) {
         Invitation.InvitationProvider invitationProvider = (Invitation.InvitationProvider) providerMap.get(Invitation.NAMESPACE);
-        invitationProvider.addInvitationListener(invitationListener);
+        invitationProvider.addInvitationListener(invitationListener, selfClient, userName);
     }
 
     public void addGroupProfileListener(GroupProfileListener groupProfileListener) {
