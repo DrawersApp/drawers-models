@@ -57,10 +57,8 @@ public class Invitation extends MqttStanaza {
         String selfClientId;
         String userName;
 
-        public void addInvitationListener(InvitationListener invitationListener, String selfClientId, String userName) {
+        public void addInvitationListener(InvitationListener invitationListener) {
             invitationListeners.add(invitationListener);
-            this.selfClientId = selfClientId;
-            this.userName = userName;
         }
 
         @Override
@@ -85,6 +83,11 @@ public class Invitation extends MqttStanaza {
             for (InvitationListener invitationListener : invitationListeners) {
                 invitationListener.invited(invitationInfo, publisher, joiningText, packetId);
             }
+        }
+
+        public void setClientIdAndName(String clientId, String userName) {
+            this.selfClientId = clientId;
+            this.userName = userName;
         }
     }
 
