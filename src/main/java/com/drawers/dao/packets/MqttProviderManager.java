@@ -55,7 +55,7 @@ public final class MqttProviderManager {
     public void setClientIdAndName(String clientId, String name) {
         this.clientId = clientId;
         this.name = name;
-        addClientIdAndNameToInvitationListener(clientId, name);
+        addClientIdAndName(clientId, name);
     }
 
     private Map<String, MqttProvider> providerMap = new ConcurrentHashMap<>();
@@ -152,8 +152,10 @@ public final class MqttProviderManager {
         mqttCallProvider.addCallListener(newCallListener);
     }
 
-    public void addClientIdAndNameToInvitationListener(String clientId, String userName) {
+    public void addClientIdAndName(String clientId, String userName) {
         Invitation.InvitationProvider invitationProvider = (Invitation.InvitationProvider) providerMap.get(Invitation.NAMESPACE);
         invitationProvider.setClientIdAndName(clientId, userName);
+        GroupMembers.GroupMembersProvider groupMembersProvider = (GroupMembers.GroupMembersProvider) providerMap.get(GroupMembers.NAMESPACE);
+        groupMembersProvider.setSelfClientId(clientId);
     }
 }
