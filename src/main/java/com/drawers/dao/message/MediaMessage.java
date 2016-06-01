@@ -2,7 +2,9 @@ package com.drawers.dao.message;
 
 import com.drawers.dao.utils.Singletons;
 
-public class MediaMessage implements BaseMessage {
+import java.io.Serializable;
+
+public class MediaMessage implements BaseMessage, Serializable {
 
     private boolean contentUploaded;
     /* remote cloudinary name */
@@ -84,16 +86,19 @@ public class MediaMessage implements BaseMessage {
     }
 
     @Override
-    public String toString() {
-        return "MediaMessage [" + "name=" + name
-                + ", path=" + path
-                + ", type=" + type
-                + ", state=" + state.toString() + "]";
+    public String toJsonString() {
+        return Singletons.singletonsInstance.gson.toJson(this);
     }
 
     @Override
-    public String toJsonString() {
-        return Singletons.singletonsInstance.gson.toJson(this);
+    public String toString() {
+        return "MediaMessage{" +
+                "contentUploaded=" + contentUploaded +
+                ", name='" + name + '\'' +
+                ", type='" + type + '\'' +
+                ", state=" + state +
+                ", path='" + path + '\'' +
+                '}';
     }
 
     public enum State {
