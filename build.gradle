@@ -11,5 +11,5 @@ dependencies {
     compile 'com.google.code.gson:gson:2.6.2'
     compile 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.0.2'
 
-    compile 'junit:junit:4.12'
+    compile 'junit:junit:4.8.2'
 }

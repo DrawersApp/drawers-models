@@ -49,6 +49,12 @@ public class GroupMembers extends MqttStanaza {
 
     public static class GroupMembersProvider extends MqttProvider {
 
+        public void setSelfClientId(String selfClientId) {
+            this.selfClientId = selfClientId;
+        }
+
+        private String selfClientId;
+
         private Set<GroupMembersListener> groupMembersListeners = new CopyOnWriteArraySet<>();
 
         public void addGroupMembersListener(GroupMembersListener groupMembersListener) {
@@ -62,9 +68,18 @@ public class GroupMembers extends MqttStanaza {
         @Override
         public void processStanza(String topic, String mqttStanaza, PublisherImpl publisher) {
             GroupMembersList groupMembersList = fromString(mqttStanaza);
+            if (groupMembersList.getM() == null) {
+                groupMembersList.setM(new HashSet<String>());
+            }
             for (GroupMembersListener groupMembersListener : groupMembersListeners) {
                 groupMembersListener.groupMemberAdded(groupMembersList, topic, publisher);
             }
+            if (groupMembersList.getM().contains(selfClientId)) {
+                return;
+            }
+            // Added yourself to the group. send update.
+            groupMembersList.getM().add(selfClientId);
+            new GroupMembers(groupMembersList, topic).sendStanza(publisher);
         }
     }
 

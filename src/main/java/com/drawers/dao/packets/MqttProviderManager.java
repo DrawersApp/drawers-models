@@ -27,6 +27,8 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public final class MqttProviderManager {
     private static Map<PublisherImpl, MqttProviderManager> INSTANCES = new WeakHashMap<>();
+    private String clientId;
+    private String name;
 
     public static synchronized MqttProviderManager getInstanceFor(PublisherImpl publisher) {
         MqttProviderManager mqttProviderManager = INSTANCES.get(publisher);
@@ -48,6 +50,12 @@ public final class MqttProviderManager {
         providerMap.put(GroupProfile.NAMESPACE, new GroupProfile.GroupProfileProvider());
         providerMap.put(GroupMessage.NAMESPACE, new GroupMessage.GroupMessageProvider());
         providerMap.put(Profile.NAMESPACE, new Profile.ProfileProvider());
+    }
+
+    public void setClientIdAndName(String clientId, String name) {
+        this.clientId = clientId;
+        this.name = name;
+        addClientIdAndName(clientId, name);
     }
 
     private Map<String, MqttProvider> providerMap = new ConcurrentHashMap<>();
@@ -124,9 +132,9 @@ public final class MqttProviderManager {
         groupMembersProvider.addGroupMembersListener(groupMembersListener);
     }
 
-    public void addInvitationListener(InvitationListener invitationListener, String selfClient, String userName) {
+    public void addInvitationListener(InvitationListener invitationListener) {
         Invitation.InvitationProvider invitationProvider = (Invitation.InvitationProvider) providerMap.get(Invitation.NAMESPACE);
-        invitationProvider.addInvitationListener(invitationListener, selfClient, userName);
+        invitationProvider.addInvitationListener(invitationListener);
     }
 
     public void addGroupProfileListener(GroupProfileListener groupProfileListener) {
@@ -142,5 +150,12 @@ public final class MqttProviderManager {
     public void addCallListener(NewCallListener newCallListener) {
         MqttCall.MqttCallProvider mqttCallProvider = (MqttCall.MqttCallProvider) providerMap.get(MqttCall.NAMESPACE);
         mqttCallProvider.addCallListener(newCallListener);
+    }
+
+    public void addClientIdAndName(String clientId, String userName) {
+        Invitation.InvitationProvider invitationProvider = (Invitation.InvitationProvider) providerMap.get(Invitation.NAMESPACE);
+        invitationProvider.setClientIdAndName(clientId, userName);
+        GroupMembers.GroupMembersProvider groupMembersProvider = (GroupMembers.GroupMembersProvider) providerMap.get(GroupMembers.NAMESPACE);
+        groupMembersProvider.setSelfClientId(clientId);
     }
 }
