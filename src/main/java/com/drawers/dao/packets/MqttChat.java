@@ -73,7 +73,7 @@ public class MqttChat extends MqttStanaza {
 
         @Override
         public void processStanza(String topic, String mqttStanaza, PublisherImpl mqttConnection) {
-            MqttChatMessage mqttChatMessage = fromString(mqttStanaza);
+            MqttChatMessage mqttChatMessage = MqttChatMessage.fromString(mqttStanaza);
             // Notify Listeners.
             if (!validate(mqttChatMessage)) {
                 return;
@@ -105,16 +105,11 @@ public class MqttChat extends MqttStanaza {
 
         @Override
         public void acknowledgeStanza(final String topic, final String mqttStanza) {
-            final MqttChatMessage mqttChatMessage = fromString(mqttStanza);
+            final MqttChatMessage mqttChatMessage = MqttChatMessage.fromString(mqttStanza);
             for (NewMessageListener messageListener : messageListeners) {
                 messageListener.acknowledgeStanza(mqttChatMessage);
             }
 
         }
     }
-
-    public static MqttChatMessage fromString(String json) {
-        return Singletons.singletonsInstance.gson.fromJson(json, MqttChatMessage.class);
-    }
-
 }

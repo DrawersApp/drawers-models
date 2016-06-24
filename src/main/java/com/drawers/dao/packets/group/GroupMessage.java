@@ -1,9 +1,9 @@
 package com.drawers.dao.packets.group;
 
+import com.drawers.dao.message.GroupMessageContainer;
 import com.drawers.dao.mqttinterface.PublisherImpl;
 import com.drawers.dao.packets.listeners.GroupMessageListener;
 import com.drawers.dao.utils.Singletons;
-import com.google.gson.annotations.SerializedName;
 import com.drawers.dao.packets.MqttChat;
 import com.drawers.dao.packets.MqttProvider;
 import com.drawers.dao.packets.MqttStanaza;
@@ -47,30 +47,10 @@ public class GroupMessage extends MqttStanaza {
         publisher.publish(getChannel(), mqttMessage, null, null);
     }
 
-    public static class GroupMessageContainer {
-
-        @SerializedName("i")
-        public String messageId;
-        @SerializedName("m")
-        public String message;
-        @SerializedName("s")
-        public String senderUid;
-
-        public GroupMessageContainer(String messageId, String message, String senderUid, ChatConstant.ChatType chatType) {
-            this.messageId = messageId;
-            this.message = message;
-            this.senderUid = senderUid;
-            this.chatType = chatType;
-        }
-
-        @SerializedName("c")
-        public ChatConstant.ChatType chatType;
-    }
-
     public static class GroupMessageProvider extends MqttProvider {
         @Override
         public void processStanza(String topic, String mqttStanaza, PublisherImpl publisher) {
-            GroupMessageContainer groupMessageContainer = fromString(mqttStanaza);
+            GroupMessageContainer groupMessageContainer = GroupMessageContainer.fromString(mqttStanaza);
             // Add to realm.
             if (!validate(groupMessageContainer)) {
                 return;
@@ -81,16 +61,16 @@ public class GroupMessage extends MqttStanaza {
         }
 
         private boolean validate(GroupMessageContainer groupMessageContainer) {
-            if (groupMessageContainer.message == null) {
+            if (groupMessageContainer.getMessage() == null) {
                 return false;
             }
-            if (groupMessageContainer.messageId == null) {
+            if (groupMessageContainer.getMessageId() == null) {
                 return false;
             }
             if (!ChatConstant.validType(groupMessageContainer.chatType)) {
                 return false;
             }
-            if (groupMessageContainer.senderUid == null) {
+            if (groupMessageContainer.getSenderUid() == null) {
                 return false;
             }
             return true;
@@ -98,7 +78,7 @@ public class GroupMessage extends MqttStanaza {
 
         @Override
         public void acknowledgeStanza(final String topic, final String mqttStanza) {
-            GroupMessageContainer groupMessageContainer = fromString(mqttStanza);
+            GroupMessageContainer groupMessageContainer = GroupMessageContainer.fromString(mqttStanza);
             for (GroupMessageListener groupMessageListener : groupMessageListeners) {
                 groupMessageListener.messageSendAck(groupMessageContainer);
             }
@@ -115,10 +95,5 @@ public class GroupMessage extends MqttStanaza {
             groupMessageListeners.clear();
         }
     }
-
-    public static GroupMessageContainer fromString(String json) {
-        return Singletons.singletonsInstance.gson.fromJson(json, GroupMessageContainer.class);
-    }
-
 
 }

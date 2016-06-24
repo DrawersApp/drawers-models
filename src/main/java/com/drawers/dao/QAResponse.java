@@ -1,11 +1,14 @@
 package com.drawers.dao;
 
+import com.drawers.dao.message.BaseMessage;
 import com.google.gson.annotations.SerializedName;
+
+import java.io.Serializable;
 
 /**
  * Created by harshit on 1/5/16.
  */
-public class QAResponse {
+public class QAResponse implements BaseMessage {
     public String getHeroImage() {
         return heroImage;
     }
@@ -85,6 +88,11 @@ public class QAResponse {
 
     private String getStripDescription(String description) {
         return description.length() < 100 ? description : String.format("%.100s", description) + "...";
+    }
+
+    @Override
+    public String toJsonString() {
+        return null;
     }
 
     public static class ActionableItem {

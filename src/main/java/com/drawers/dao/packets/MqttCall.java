@@ -67,13 +67,9 @@ public class MqttCall extends MqttStanaza {
         @Override
         public void processStanza(String topic, String mqttStanaza, PublisherImpl publisher) {
             for (NewCallListener callListener : callListeners) {
-                callListener.receiveCall(fromString(mqttStanaza));
+                callListener.receiveCall(MqttCallMessage.fromString(mqttStanaza));
             }
         }
-    }
-
-    public static MqttCallMessage fromString(String json) {
-        return Singletons.singletonsInstance.gson.fromJson(json, MqttCallMessage.class);
     }
 
     public static String getChatChannel(String groupId) {

@@ -1,7 +1,9 @@
 package com.drawers.dao.message;
 
 
-public interface BaseMessage {
+import java.io.Serializable;
+
+public interface BaseMessage extends Serializable {
     String toString();
 
     String toJsonString();

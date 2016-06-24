@@ -4,7 +4,7 @@ import com.drawers.dao.utils.Singletons;
 
 import java.io.Serializable;
 
-public class MediaMessage implements BaseMessage, Serializable {
+public class MediaMessage implements BaseMessage {
 
     private boolean contentUploaded;
     /* remote cloudinary name */

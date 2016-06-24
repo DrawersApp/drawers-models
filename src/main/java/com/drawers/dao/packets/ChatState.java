@@ -1,10 +1,10 @@
 package com.drawers.dao.packets;
 
 
+import com.drawers.dao.message.ChatStateContainer;
 import com.drawers.dao.mqttinterface.PublisherImpl;
 import com.drawers.dao.packets.listeners.ChatStateListener;
 import com.drawers.dao.utils.Singletons;
-import com.google.gson.annotations.SerializedName;
 
 
 import org.eclipse.paho.client.mqttv3.MqttMessage;
@@ -49,7 +49,7 @@ public class ChatState extends MqttStanaza {
 
     @Override
     public void sendStanza(PublisherImpl publisher) {
-        if (!updateChatState(uid, chatStateContainer.chatStateValues)) {
+        if (!updateChatState(uid, chatStateContainer.getChatStateValues())) {
             return;
         }
         MqttMessage mqttMessage = new MqttMessage(getMessage().getBytes());
@@ -88,17 +88,17 @@ public class ChatState extends MqttStanaza {
 
         @Override
         public void processStanza(String topic, String mqttStanaza, PublisherImpl publisher) {
-            ChatStateContainer chatStateContainer = fromString(mqttStanaza);
+            ChatStateContainer chatStateContainer = ChatStateContainer.fromString(mqttStanaza);
 
-            if (!ChatStateValues.values.contains(chatStateContainer.chatStateValues)) {
+            if (!ChatStateValues.values.contains(chatStateContainer.getChatStateValues())) {
                 return;
             }
             // Show the typing receipt. Just replicate with current logic.
-            chatStateJidMapping.put(chatStateContainer.id, chatStateContainer.chatStateValues);
+            chatStateJidMapping.put(chatStateContainer.getId(), chatStateContainer.getChatStateValues());
             for (ChatStateListener chatStateListener : chatStateListeners) {
-                chatStateListener.notifyActiveListener(chatStateContainer.chatStateValues, chatStateContainer.id);
+                chatStateListener.notifyActiveListener(chatStateContainer.getChatStateValues(), chatStateContainer.getId());
             }
-            stateChanged(chatStateContainer.id, chatStateContainer.chatStateValues);
+            stateChanged(chatStateContainer.getId(), chatStateContainer.getChatStateValues());
 
         }
     }
@@ -117,21 +117,6 @@ public class ChatState extends MqttStanaza {
         return false;
     }
 
-    private class ChatStateContainer {
-        public ChatStateContainer(String id, ChatStateValues chatStateValues) {
-            this.id = id;
-            this.chatStateValues = chatStateValues;
-        }
-
-        @SerializedName("i")
-        private String id; // sender id - expected to find who is typing.
-        @SerializedName("c")
-        private ChatStateValues chatStateValues;
-    }
-
-    public static ChatStateContainer fromString(String json) {
-        return Singletons.singletonsInstance.gson.fromJson(json, ChatStateContainer.class);
-    }
 
     // Listeners for ui
     public static void addChatStateListener(ChatStateListenerUI chatStateListenerUI) {

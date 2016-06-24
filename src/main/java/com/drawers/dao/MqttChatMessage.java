@@ -1,8 +1,10 @@
 package com.drawers.dao;
 
+import com.drawers.dao.message.BaseMessage;
+import com.drawers.dao.utils.Singletons;
 import com.google.gson.annotations.SerializedName;
 
-public  class MqttChatMessage {
+public  class MqttChatMessage implements BaseMessage {
 
     @SerializedName("i")
     public String messageId;
@@ -24,4 +26,13 @@ public  class MqttChatMessage {
         this.deliveryReceipt = deliveryReceipt;
     }
 
+
+    public static MqttChatMessage fromString(String json) {
+        return Singletons.singletonsInstance.gson.fromJson(json, MqttChatMessage.class);
+    }
+
+    @Override
+    public String toJsonString() {
+        return Singletons.singletonsInstance.gson.toJson(this);
+    }
 }

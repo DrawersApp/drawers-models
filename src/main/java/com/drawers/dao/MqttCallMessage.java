@@ -1,11 +1,15 @@
 package com.drawers.dao;
 
+import com.drawers.dao.message.BaseMessage;
+import com.drawers.dao.utils.Singletons;
 import com.google.gson.annotations.SerializedName;
+
+import java.io.Serializable;
 
 /**
  * Created by nishant.pathak on 04/05/16.
  */
-public class MqttCallMessage {
+public class MqttCallMessage implements BaseMessage {
 
     @SerializedName("i")
     public String messageId;
@@ -29,4 +33,12 @@ public class MqttCallMessage {
         this.time = time;
     }
 
+    public static MqttCallMessage fromString(String json) {
+        return Singletons.singletonsInstance.gson.fromJson(json, MqttCallMessage.class);
+    }
+
+    @Override
+    public String toJsonString() {
+        return Singletons.singletonsInstance.gson.toJson(this);
+    }
 }

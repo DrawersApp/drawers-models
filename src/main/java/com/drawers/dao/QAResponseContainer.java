@@ -1,15 +1,18 @@
 package com.drawers.dao;
 
-import com.google.gson.Gson;
+
+import com.drawers.dao.message.BaseMessage;
+import com.drawers.dao.utils.Singletons;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by nishant.pathak on 01/05/16.
  */
-public class QAResponseContainer {
+public class QAResponseContainer implements BaseMessage {
     @SerializedName("qar")
     private List<QAResponse> qaResponses = new ArrayList<>(10);
     @SerializedName("m")
@@ -32,13 +35,11 @@ public class QAResponseContainer {
     }
 
     public String toJsonString() {
-        Gson gson = new Gson();
-        return gson.toJson(this);
+        return Singletons.singletonsInstance.gson.toJson(this);
     }
 
     public static QAResponseContainer fromString(String json) {
-        Gson gson = new Gson();
-        return gson.fromJson(json, QAResponseContainer.class);
+        return Singletons.singletonsInstance.gson.fromJson(json, QAResponseContainer.class);
     }
 
     public QAResponseContainer(List<QAResponse> qaResponses, String more) {
