@@ -2,13 +2,11 @@ package com.drawers.dao.packets;
 
 import com.drawers.dao.ChatConstant;
 import com.drawers.dao.MqttChatMessage;
-import com.drawers.dao.utils.Singletons;
 import com.drawers.dao.mqttinterface.PublisherImpl;
 import com.drawers.dao.packets.listeners.NewMessageListener;
-
+import com.drawers.dao.utils.Singletons;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
-import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
@@ -29,10 +27,14 @@ public class MqttChat extends MqttStanaza {
     protected final String uid;
     public static final int QOS = 1;
 
-    public MqttChat(String uid, String messageid, String  message, boolean deliveryReceipt,
-                    ChatConstant.ChatType chatType, String selfClientId) {
+    public MqttChat(String uid /* to whom you want to send message */,
+                    String messageId /* id to uniquely identify this message */,
+                    String message /* string representation of the message */,
+                    boolean deliveryReceipt /* true if you need delivery receipt */,
+                    ChatConstant.ChatType chatType /* what exactly string representation means, one of text, image, video, map, contact, file */,
+                    String selfClientId /* your client id */) {
         this.uid = uid;
-        mqttChatMessage = new MqttChatMessage(messageid, message, selfClientId, chatType, deliveryReceipt);
+        mqttChatMessage = new MqttChatMessage(messageId, message, selfClientId, chatType, deliveryReceipt);
     }
 
     @Override
