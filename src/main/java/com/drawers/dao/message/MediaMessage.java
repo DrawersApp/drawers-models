@@ -63,6 +63,7 @@ public class MediaMessage implements BaseMessage, Serializable {
         this.path = path;
         this.type = type;
         this.state = State.INIT;
+        this.metaData = metaData;
     }
 
     public MediaMessage(String name, String path, MetaData metaData) {
@@ -81,6 +82,7 @@ public class MediaMessage implements BaseMessage, Serializable {
         this.state = State.INIT;
     }
 
+    @Deprecated
     public MediaMessage(String name, String path) {
         this.name = name;
         this.path = path;
