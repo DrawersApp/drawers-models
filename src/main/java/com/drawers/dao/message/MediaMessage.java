@@ -27,17 +27,25 @@ public class MediaMessage implements BaseMessage, Serializable {
         this.rName = realName;
     }
 
+    public MediaMessage(String name, String path, String realName) {
+        this.name = name;
+        this.path = path;
+        this.state = State.INIT;
+        this.rName = realName;
+    }
+
+
     public MediaMessage(MediaMessage mm) {
         this.name = mm.getName();
         this.path = null;
         this.type = mm.getType();
+        this.rName = mm.getRealName();
         this.state = State.INIT;
     }
 
     public MediaMessage(String name, String path) {
         this.name = name;
         this.path = path;
-        this.type = null;
         this.state = State.INIT;
     }
 
@@ -101,12 +109,13 @@ public class MediaMessage implements BaseMessage, Serializable {
     @Override
     public String toString() {
         return "MediaMessage{" +
-                "contentUploaded=" + contentUploaded +
-                ", name='" + name + '\'' +
-                ", type='" + type + '\'' +
-                ", state=" + state +
-                ", path='" + path + '\'' +
-                '}';
+            "contentUploaded=" + contentUploaded +
+            ", name='" + name + '\'' +
+            ", type='" + type + '\'' +
+            ", state=" + state +
+            ", path='" + path + '\'' +
+            ", rName='" + rName + '\'' +
+            '}';
     }
 
     public enum State {
