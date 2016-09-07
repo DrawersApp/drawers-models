@@ -16,22 +16,53 @@ public class MediaMessage implements BaseMessage, Serializable {
     /* local path */
     private String path;
 
-    /* preserve real name of the file */
-    private String rName;
+    private MetaData metaData;
 
-    public MediaMessage(String name, String path, String type, String realName) {
+
+    public static class MetaData implements BaseMessage, Serializable {
+        /* preserve real name of the file */
+        private String name;
+
+        private long size;
+
+        @Override
+        public String toJsonString() {
+            return Singletons.singletonsInstance.gson.toJson(this);
+        }
+
+        @Override
+        public String toString() {
+            return "MetaData{" +
+                "name='" + name + '\'' +
+                ", size=" + size +
+                '}';
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public long getSize() {
+            return size;
+        }
+    }
+
+    public MetaData getMetaData() {
+        return metaData;
+    }
+
+    public MediaMessage(String name, String path, String type, MetaData metaData) {
         this.name = name;
         this.path = path;
         this.type = type;
         this.state = State.INIT;
-        this.rName = realName;
     }
 
-    public MediaMessage(String name, String path, String realName) {
+    public MediaMessage(String name, String path, MetaData metaData) {
         this.name = name;
         this.path = path;
         this.state = State.INIT;
-        this.rName = realName;
+        this.metaData = metaData;
     }
 
 
@@ -39,7 +70,7 @@ public class MediaMessage implements BaseMessage, Serializable {
         this.name = mm.getName();
         this.path = null;
         this.type = mm.getType();
-        this.rName = mm.getRealName();
+        this.metaData = mm.getMetaData();
         this.state = State.INIT;
     }
 
@@ -67,14 +98,6 @@ public class MediaMessage implements BaseMessage, Serializable {
 
     public void setContentUploaded(boolean contentUploaded) {
         this.contentUploaded = contentUploaded;
-    }
-
-    public String getDisplayName() {
-        return name != null && name.startsWith("rawFiles/") ? name.substring("rawFiles/".length(), name.length() - 36) : name;
-    }
-
-    public String getRealName() {
-        return rName;
     }
 
     public String getName() {
@@ -114,7 +137,7 @@ public class MediaMessage implements BaseMessage, Serializable {
             ", type='" + type + '\'' +
             ", state=" + state +
             ", path='" + path + '\'' +
-            ", rName='" + rName + '\'' +
+            ", metaData=" + metaData +
             '}';
     }
 
