@@ -16,14 +16,16 @@ public class MediaMessage implements BaseMessage, Serializable {
     /* local path */
     private String path;
 
-    private MetaData metaData;
+    private MetaData metaData = new MetaData();
 
 
     public static class MetaData implements BaseMessage, Serializable {
         /* preserve real name of the file */
-        private String name;
+        private String name = "";
 
-        private long size;
+        private long size = 0;
+
+        MetaData() {}
 
         public MetaData(String name, long size) {
             this.name = name;
