@@ -16,11 +16,15 @@ public class MediaMessage implements BaseMessage, Serializable {
     /* local path */
     private String path;
 
-    public MediaMessage(String name, String path, String type) {
+    /* preserve real name of the file */
+    private String rName;
+
+    public MediaMessage(String name, String path, String type, String realName) {
         this.name = name;
         this.path = path;
         this.type = type;
         this.state = State.INIT;
+        this.rName = realName;
     }
 
     public MediaMessage(MediaMessage mm) {
@@ -59,6 +63,10 @@ public class MediaMessage implements BaseMessage, Serializable {
 
     public String getDisplayName() {
         return name != null && name.startsWith("rawFiles/") ? name.substring("rawFiles/".length(), name.length() - 36) : name;
+    }
+
+    public String getRealName() {
+        return rName;
     }
 
     public String getName() {
