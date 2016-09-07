@@ -25,6 +25,11 @@ public class MediaMessage implements BaseMessage, Serializable {
 
         private long size;
 
+        public MetaData(String name, long size) {
+            this.name = name;
+            this.size = size;
+        }
+
         @Override
         public String toJsonString() {
             return Singletons.singletonsInstance.gson.toJson(this);
