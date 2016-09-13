@@ -27,6 +27,14 @@ public class MediaMessage implements BaseMessage, Serializable {
 
         MetaData() {}
 
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public void setSize(long size) {
+            this.size = size;
+        }
+
         public MetaData(String name, long size) {
             this.name = name;
             this.size = size;
@@ -72,7 +80,6 @@ public class MediaMessage implements BaseMessage, Serializable {
         this.state = State.INIT;
         this.metaData = metaData;
     }
-
 
     public MediaMessage(MediaMessage mm) {
         this.name = mm.getName();
