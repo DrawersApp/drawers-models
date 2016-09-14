@@ -66,6 +66,10 @@ public class MediaMessage implements BaseMessage, Serializable {
         return metaData;
     }
 
+    public void setMetaData(MetaData metaData) {
+        this.metaData = metaData;
+    }
+
     public MediaMessage(String name, String path, String type, MetaData metaData) {
         this.name = name;
         this.path = path;
